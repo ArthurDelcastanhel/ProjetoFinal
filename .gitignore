@@ -1,0 +1,16 @@
+# Diretórios de build do CMake e CLion
+cmake-build-*/
+build/
+.idea/
+.vscode/
+
+# Binários e objetos compilados
+*.o
+*.obj
+*.exe
+*.out
+*.app
+
+# Arquivos temporários do sistema operacional
+.DS_Store
+Thumbs.db
