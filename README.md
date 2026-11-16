@@ -11,7 +11,7 @@ Sistema em linguagem C para gestão de abrigos de animais, controlando cadastros
 Necessidade de automatizar o fluxo de atendimento veterinário e organizar o cadastro de animais para evitar perdas de registros.
 
 ## Fontes de pesquisas realizadas
-* Baseado em rotinas reais de abrigos de animais e conceitos práticos da disciplina de Programação 2[cite: 1, 2].
+* Baseado em rotinas reais de abrigos de animais e conceitos práticos da disciplina de Programação 2.
 
 ## Funcionalidades do sistema
 * Cadastro, listagem e busca de cães.
