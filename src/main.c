@@ -1,65 +1,92 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include "modelos.h"
-#include "estruturas.h"
+#include "canil.h"
 
-void exibir_cabecalho(void) {
-    printf("\n============================================================\n");
-    printf("   SISTEMA DE GESTAO - ABRIGO DE ADOCAO DE ANIMAIS (ONG)    \n");
-    printf("   IFSC - Engenharia de Telecomunicacoes - Programacao II   \n");
-    printf("============================================================\n");
-}
+int main() {
+    NoAVL *caes = NULL;
+    NoABP *estoque = NULL;
+    FilaEspera fila;
+    inicializarFila(&fila);
+    NoPilha *pilhaHistorico = NULL;
 
-void exibir_menu_principal(void) {
-    printf("\n[ MENU PRINCIPAL ]\n");
-    printf("  1. Gerenciar Animais (Arvore AVL)\n");
-    printf("  2. Gerenciar Adotantes (Arvore Binaria de Pesquisa - ABP)\n");
-    printf("  3. Fila de Espera para Adocao (Fila FIFO)\n");
-    printf("  4. Prontuario e Vacinacao (Lista Duplamente Encadeada)\n");
-    printf("  5. Historico de Operacoes (Pilha LIFO)\n");
-    printf("  6. Relatorios Gerais\n");
-    printf("  0. Salvar e Sair\n");
-    printf("------------------------------------------------------------\n");
-    printf("Escolha uma opcao: ");
-}
+    // Escolhi alguns dados aleatórios só para fazer um teste
+    caes = inserirAVL(caes, 101, "Bob", "Labrador", 3);
+    caes = inserirAVL(caes, 102, "Mel", "Poodle", 5);
+    estoque = inserirABP(estoque, 50, "Racao_15kg", 10);
 
-int main(void) {
-    int opcao = -1;
-
-    exibir_cabecalho();
-
+    int opcao;
     do {
-        exibir_menu_principal();
-        if (scanf("%d", &opcao) != 1) {
-            while (getchar() != '\n'); // Limpa o buffer de entrada
-            opcao = -1;
-        }
+        printf("\n==============================\n");
+        printf("   CANIL - GESTÃO \n");
+        printf("==============================\n");
+        printf("1. Cadastrar Cão \n");
+        printf("2. Listar Cães Cadastrados\n");
+        printf("3. Adicionar à Fila de Espera (Fila)\n");
+        printf("4. Chamar Próximo Atendimento\n");
+        printf("5. Ver Fila de Espera\n");
+        printf("6. Ver Historico de Ações\n");
+        printf("7. Desfazer Ultima Ação\n");
+        printf("8. Salvar Dados (Persistência)\n");
+        printf("0. Sair\n");
+        printf("Escolha uma opção: ");
+        scanf("%d", &opcao);
 
-        switch (opcao) {
-            case 1:
-                printf("\n[Modulo AVL - Cadastro de Animais em construcao...]\n");
+        switch(opcao) {
+            case 1: {
+                int id, idade;
+                char nome[50], raca[40];
+                printf("ID/Microchip: ");
+                scanf("%d", &id);
+                printf("Nome do cão: ");
+                scanf("%s", nome);
+                printf("Raça: ");
+                scanf("%s", raca);
+                printf("Idade: ");
+                scanf("%d", &idade);
+
+                caes = inserirAVL(caes, id, nome, raca, idade);
+                char acao[100];
+                sprintf(acao, "Cadastro do cão %s", nome);
+                empilhar(&pilhaHistorico, acao);
+                printf("Cão cadastrado com sucesso!\n");
                 break;
+            }
             case 2:
-                printf("\n[Modulo ABP - Cadastro de Adotantes em construcao...]\n");
+                printf("\n LISTA DE CÃES \n");
+                emOrdemAVL(caes);
                 break;
-            case 3:
-                printf("\n[Modulo Fila - Fila de Adocao em construcao...]\n");
+            case 3: {
+                char nome[50], motivo[50];
+                printf("Nome do cão: ");
+                scanf("%s", nome);
+                printf("Motivo do atendimento: ");
+                scanf("%s", motivo);
+                enfileirar(&fila, nome, motivo);
+                char acao[100];
+                sprintf(acao, "Adicionado %s à fila", nome);
+                empilhar(&pilhaHistorico, acao);
                 break;
+            }
             case 4:
-                printf("\n[Modulo Lista Dupla - Prontuario em construcao...]\n");
+                desenfileirar(&fila);
                 break;
             case 5:
-                printf("\n[Modulo Pilha - Historico de Acoes em construcao...]\n");
+                mostrarFila(&fila);
                 break;
             case 6:
-                printf("\n[Modulo de Relatorios em construcao...]\n");
+                mostrarPilha(pilhaHistorico);
+                break;
+            case 7:
+                desempilhar(&pilhaHistorico);
+                break;
+            case 8:
+                salvarDados(estoque);
                 break;
             case 0:
-                printf("\nEncerrando o sistema...\n");
+                printf("Encerrando o sistema...\n");
                 break;
             default:
-                printf("\nOpcao invalida! Tente novamente.\n");
-                break;
+                printf("Opção inválida!\n");
         }
     } while (opcao != 0);
 

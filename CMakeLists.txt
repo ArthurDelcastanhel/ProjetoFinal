@@ -7,5 +7,7 @@ set(CMAKE_C_STANDARD_REQUIRED ON)
 include_directories(include)
 
 add_executable(ProjetoFinal
+        src/canil.c
+        src/canil.h
         src/main.c
 )
