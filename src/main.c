@@ -15,7 +15,7 @@ int main() {
     // se não houver nenhum cão cadastrado ainda, permite que você crie os iniciais
     if (caes == NULL) {
         int qtdInicial;
-        printf("Quantos caes iniciais voce deseja cadastrar agora? (Digite 0 para pular): ");
+        printf("Quantos cães iniciais voce deseja cadastrar agora? (Digite 0 para pular): ");
         scanf("%d", &qtdInicial);
 
         int i = 0;
@@ -23,12 +23,12 @@ int main() {
             int id, idade;
             char nome[50], raca[40];
 
-            printf("\n--- Cadastro Inicial %d ---\n", i + 1);
+            printf("\n    Cadastro Inicial %d    \n", i + 1);
             printf("ID/Microchip: ");
             scanf("%d", &id);
-            printf("Nome do cao (sem espacos): ");
+            printf("Nome do cão (sem espaços): ");
             scanf("%s", nome);
-            printf("Raca (sem espacos): ");
+            printf("Raça (sem espaços): ");
             scanf("%s", raca);
             printf("Idade: ");
             scanf("%d", &idade);
