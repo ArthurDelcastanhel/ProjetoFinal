@@ -1,69 +1,80 @@
-#ifndef PROJETOFINAL_CANIL_H
-#define PROJETOFINAL_CANIL_H
+#ifndef CANIL_H
+#define CANIL_H
 
-// usado Árvore AVL para estruturar o cadastro dos cães por ID
+// estrutura da Árvore AVL para guardar o cadastro dos cães
 typedef struct NoAVL {
-    int id;
-    char nome[50];
-    char raca[40];
-    int idade;
-    int altura;
-    struct NoAVL *esq;
-    struct NoAVL *dir;
+    int id;                 // código único ou número do microchip do cão
+    char nome[50];          // nome do cachorro
+    char raca[40];          // raça do cachorro
+    int idade;              // idade em anos
+    int altura;             // altura do nó na árvore pra calcular o balanceamento
+    struct NoAVL *esq;      // ponteiro para o filho da esquerda (IDs menores)
+    struct NoAVL *dir;      // ponteiro para o filho da direita (IDs maiores)
 } NoAVL;
 
-// estrutura da Árvore Binária de Busca para para estruturar o estoque de ração e medicamentos
+// estrutura da Árvore de Busca Binária (ABB) para o estoque do canil
 typedef struct NoABB {
-    int codigo;
-    char item[50];
-    int quantidade;
-    struct NoABB *esq;
-    struct NoABB *dir;
+    int codigo;             // código do produto no estoque
+    char item[50];          // nome do item (ex: ração. vacina, etc)
+    int quantidade;         // quantidade disponível
+    struct NoABB *esq;      // ponteiro para o filho da esquerda (códigos menores)
+    struct NoABB *dir;      // ponteiro para o filho da direita (códigos maiores)
 } NoABB;
 
-// estrutura da fila dinâmica para estruturar uma fila de espera para atendimentos e cadastros
+// nó da fila para organizar os cães esperando atendimento veterinário
 typedef struct NoFila {
-    char nomeCao[50];
-    char motivo[50];
-    struct NoFila *prox;
+    char nomeCao[50];       // nome do cão que vai ser atendido
+    char motivo[50];        // motivo da consulta (ex: castração, vacina, etc)
+    struct NoFila *prox;    // ponteiro para o próximo cão da fila
 } NoFila;
 
+// estrutura que guarda o começo e o fim da fila
 typedef struct {
-    NoFila *inicio;
-    NoFila *fim;
+    NoFila *inicio;         // ponteiro para o primeiro da fila (quem será atendido)
+    NoFila *fim;            // ponteiro para o último da fila (onde entram novos cães)
 } FilaEspera;
 
-// estrutura da pilha para implementar a ação de histórico de ações para desfazer (undo)
+// nó da Pilha para guardar o histórico de ações e permitir desfazer (Undo)
 typedef struct NoPilha {
-    char descricao[100];
-    struct NoPilha *prox;
+    char descricao[100];    // texto explicando o que foi feito no sistema
+    struct NoPilha *prox;   // ponteiro para o item de baixo na pilha
 } NoPilha;
 
-// declaração dos protótipos das funções AVL
+// protótipos das funções da Árvore AVL (Cães)
 int alturaAVL(NoAVL *n);
 int maior(int a, int b);
 int fatorBalanceamento(NoAVL *n);
 NoAVL* rotacaoDireita(NoAVL *y);
 NoAVL* rotacaoEsquerda(NoAVL *x);
 NoAVL* inserirAVL(NoAVL* no, int id, char* nome, char* raca, int idade);
+NoAVL* buscarAVL(NoAVL* raiz, int id);
+NoAVL* menorValorNo(NoAVL* no);
+NoAVL* removerAVL(NoAVL* raiz, int id);
 void emOrdemAVL(NoAVL* raiz);
+int contarCaesAVL(NoAVL* raiz);
 
-// protótipos das funções de árvore de busca binária
-NoABB* inserirABP(NoABB* raiz, int codigo, char* item, int quantidade);
-void emOrdemABP(NoABB* raiz);
+// protótipos das funções da Árvore de Busca Binária - ABB (usada para realizar e estrutura o estoque)
+NoABB* inserirABB(NoABB* raiz, int codigo, char* item, int quantidade);
+NoABB* buscarABB(NoABB* raiz, int codigo);
+void emOrdemABB(NoABB* raiz);
+int contarItensABB(NoABB* raiz);
 
-// declaração das funções de fila
+// protótipos das funções da fila (usada para implementar uma fila de espera de atendimento)
 void inicializarFila(FilaEspera *f);
 void enfileirar(FilaEspera *f, char* nomeCao, char* motivo);
 void desenfileirar(FilaEspera *f);
 void mostrarFila(FilaEspera *f);
+int contarFila(FilaEspera *f);
 
-// declaração das funções de pilha
+// protótipos das funções da pilha (histórico)
 void empilhar(NoPilha **topo, char* descricao);
 void desempilhar(NoPilha **topo);
 void mostrarPilha(NoPilha *topo);
 
-// persistência da aplicação
-void salvarDados(NoABB *estoque);
+// protótipos das funções de salvar e carregar dados (persistência no código/aplicação)
+void salvarAuxAVL(NoAVL *raiz, FILE *f);
+void salvarAuxABB(NoABB *raiz, FILE *f);
+void salvarDados(NoAVL *caes, NoABB *estoque);
+void carregarDados(NoAVL **caes, NoABB **estoque);
 
-#endif //PROJETOFINAL_CANIL_H
+#endif

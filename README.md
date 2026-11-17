@@ -13,7 +13,7 @@ Necessidade de facilitar o atendimento veterinário e organizar o cadastro de an
 ## Fontes de pesquisas realizadas
 * Artigo de Simone Nascimento destacando o excesso de animais abandonados nos abrigos para animais:
 (https://www.rampasuerj.com.br/post/ongs-passam-por-sobrecarga-com-excesso-de-animais-abandonados)
-* 
+* Utilizado o uso de AI (Gemini AI) para compreender o conceito e implementação de rotação de subárvores
 
 ## Funcionalidades do sistema
 * Cadastro, listagem e busca de cães.
