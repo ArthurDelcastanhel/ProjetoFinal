@@ -3,6 +3,7 @@
 #include <string.h>
 #include "canil.h"
 
+// uso da Árvore AVL
 int alturaAVL(NoAVL *n) {
     return (n == NULL) ? 0 : n->altura;
 }
@@ -25,7 +26,7 @@ NoAVL* rotacaoDireita(NoAVL *y) {
     return x;
 }
 
-NoAVL* rotacaoEsquerda(NoAVL *x) {
+NoAVL* rotacaoesquerda(NoAVL *x) {
     NoAVL *y = x->dir;
     NoAVL *T2 = y->esq;
     y->esq = x;
@@ -53,22 +54,23 @@ NoAVL* inserirAVL(NoAVL* no, int id, char* nome, char* raca, int idade) {
     else if (id > no->id)
         no->dir = inserirAVL(no->dir, id, nome, raca, idade);
     else
-        return no;
+        return no; // ID's duplicados não estão permitidos
 
     no->altura = 1 + maior(alturaAVL(no->esq), alturaAVL(no->dir));
     int balance = fatorBalanceamento(no);
 
+    // casos de rotação na árvore de um nó (id)
     if (balance > 1 && id < no->esq->id)
         return rotacaoDireita(no);
     if (balance < -1 && id > no->dir->id)
-        return rotacaoEsquerda(no);
+        return rotacaoesquerda(no);
     if (balance > 1 && id > no->esq->id) {
-        no->esq = rotacaoEsquerda(no->esq);
+        no->esq = rotacaoesquerda(no->esq);
         return rotacaoDireita(no);
     }
     if (balance < -1 && id < no->dir->id) {
         no->dir = rotacaoDireita(no->dir);
-        return rotacaoEsquerda(no);
+        return rotacaoesquerda(no);
     }
 
     return no;
@@ -82,9 +84,10 @@ void emOrdemAVL(NoAVL* raiz) {
     }
 }
 
-NoABP* inserirABP(NoABP* raiz, int codigo, char* item, int quantidade) {
+// usado a Árvore de Busca Binária para organizar e estruturar o estoque
+NoABB* inserirABB(NoABB* raiz, int codigo, char* item, int quantidade) {
     if (raiz == NULL) {
-        NoABP* novo = (NoABP*)malloc(sizeof(NoABP));
+        NoABB* novo = (NoABB*)malloc(sizeof(NoABB));
         novo->codigo = codigo;
         strcpy(novo->item, item);
         novo->quantidade = quantidade;
@@ -93,17 +96,17 @@ NoABP* inserirABP(NoABP* raiz, int codigo, char* item, int quantidade) {
         return novo;
     }
     if (codigo < raiz->codigo)
-        raiz->esq = inserirABP(raiz->esq, codigo, item, quantidade);
+        raiz->esq = inserirABB(raiz->esq, codigo, item, quantidade);
     else if (codigo > raiz->codigo)
-        raiz->dir = inserirABP(raiz->dir, codigo, item, quantidade);
+        raiz->dir = inserirABB(raiz->dir, codigo, item, quantidade);
     return raiz;
 }
 
-void emOrdemABP(NoABP* raiz) {
+void emOrdemABB(NoABB* raiz) {
     if (raiz != NULL) {
-        emOrdemABP(raiz->esq);
-        printf("[Cód: %d] Item: %s | Qtd: %d\n", raiz->codigo, raiz->item, raiz->quantidade);
-        emOrdemABP(raiz->dir);
+        emOrdemABB(raiz->esq);
+        printf("Código: %d Item: %s | Quantidade: %d\n", raiz->codigo, raiz->item, raiz->quantidade);
+        emOrdemABB(raiz->dir);
     }
 }
 
@@ -185,7 +188,7 @@ void mostrarPilha(NoPilha *topo) {
     }
 }
 
-void salvarDados(NoABP *estoque) {
+void salvarDados(NoABB *estoque) {
     FILE *f = fopen("dados_estoque.txt", "w");
     if (f == NULL) {
         printf("Erro ao abrir arquivo para escrita!\n");

@@ -1,6 +1,6 @@
 # Sistema de Gestão para Canil
 
-## Título e descrição do projeto
+## Descrição do projeto
 Sistema em linguagem C para gestão de abrigos de animais, controlando cadastros, filas de atendimento, estoque e histórico de ações.
 
 ## Instituição escolhida
@@ -8,10 +8,12 @@ Sistema em linguagem C para gestão de abrigos de animais, controlando cadastros
 * **Atuação:** Resgate, reabilitação e controle de cães abandonados e adoções.
 
 ## Justificativa
-Necessidade de automatizar o fluxo de atendimento veterinário e organizar o cadastro de animais para evitar perdas de registros.
+Necessidade de facilitar o atendimento veterinário e organizar o cadastro de animais para evitar perdas de registros.
 
 ## Fontes de pesquisas realizadas
-* Baseado em rotinas reais de abrigos de animais e conceitos práticos da disciplina de Programação 2.
+* Artigo de Simone Nascimento destacando o excesso de animais abandonados nos abrigos para animais:
+(https://www.rampasuerj.com.br/post/ongs-passam-por-sobrecarga-com-excesso-de-animais-abandonados)
+* 
 
 ## Funcionalidades do sistema
 * Cadastro, listagem e busca de cães.
