@@ -4,8 +4,8 @@
 #include "canil.h"
 
 
-// FUNÇÕES DA ÁRVORE AVL (para o cadastro dos cães)
-// função que devolve a altura de um nó da AVL
+// funções da árvore avl (para o cadastro dos cães)
+// função que devolve a altura de um nó da avl
 int alturaAVL(NoAVL *n) {
     if (n == NULL) {        // se o nó não existir (for vazio)
         return 0;           // a altura dele é zero
@@ -63,124 +63,124 @@ NoAVL* rotacaoEsquerda(NoAVL *x) {
     return y;               // devolve 'y' como nova raiz desse trecho
 }
 
-// insere um novo cão na árvore AVL e faz o balanceamento se precisar
+// insere um novo cão na árvore avl e faz o balanceamento se precisar
 NoAVL* inserirAVL(NoAVL* no, int id, char* nome, char* raca, int idade) {
     if (no == NULL) {                                       // se achou um lugar vazio na árvore
         NoAVL* novo = (NoAVL*)malloc(sizeof(NoAVL));        // reserva espaço na memória para o novo cão
-        novo->id = id;                                      // guarda o ID digitado
+        novo->id = id;                                      // guarda o id digitado
         strcpy(novo->nome, nome);                           // copia o nome para dentro da struct
         strcpy(novo->raca, raca);                           // copia a raça para dentro da struct
         novo->idade = idade;                                // guarda a idade
-        novo->altura = 1;                                   // todo nó novo começa como folha, com altura 1
+        novo->altura = 1;                                   // tod0 nó novo começa como folha, com altura 1
         novo->esq = NULL;                                   // começa sem filho na esquerda
         novo->dir = NULL;                                   // começa sem filho na direita
         return novo;                                        // entrega o nó recém-criado
     }
 
-    if (id < no->id) {                                      // se o ID novo for menor que o ID atual
-        no->esq = inserirAVL(no->esq, id, nome, raca, idade); // continua procurando vaga pelo lado esquerdo
-    } else if (id > no->id) {                               // Se o ID novo for maior que o ID atual
-        no->dir = inserirAVL(no->dir, id, nome, raca, idade); // Continua procurando vaga pelo lado direito
-    } else {                                                // Se o ID for igual
-        return no;                                          // Não faz nada, pois não aceita ID repetido
+    if (id < no->id) {                                      // se o id novo for menor que o id atual
+        no->esq = inserirAVL(no->esq, id, nome, raca, idade); // continua procurando um lugar vago pelo lado esquerdo
+    } else if (id > no->id) {                               // se o id novo for maior que o id atual
+        no->dir = inserirAVL(no->dir, id, nome, raca, idade); // continua procurando vaga pelo lado direito
+    } else {                                                // se o id for igual
+        return no;                                          // não faz nada, pois não aceita id repetido
     }
 
-    // Atualiza a altura do nó atual depois de ter inserido lá embaixo
+    // atualiza a altura do nó atual depois de ter inserido lá embaixo
     no->altura = 1 + maior(alturaAVL(no->esq), alturaAVL(no->dir));
 
-    // Verifica se o nó ficou torto (desbalanceado)
+    // verifica se o nó ficou torto (desbalanceado)
     int balance = fatorBalanceamento(no);
 
-    // Caso 1: Pesado na esquerda e inseriu na esquerda (Rotação simples à direita)
+    // caso 1: pesado na esquerda e inseriu na esquerda (rotação simples à direita)
     if (balance > 1 && id < no->esq->id) {
         return rotacaoDireita(no);
     }
-    // Caso 2: Pesado na direita e inseriu na direita (Rotação simples à esquerda)
+    // caso 2: pesado na direita e inseriu na direita (rotação simples à esquerda)
     if (balance < -1 && id > no->dir->id) {
         return rotacaoEsquerda(no);
     }
-    // Caso 3: Pesado na esquerda, mas inseriu na direita do filho (Rotação dupla Esquerda-Direita)
+    // caso 3: pesado na esquerda, mas inseriu na direita do filho (rotação dupla esquerda-direita)
     if (balance > 1 && id > no->esq->id) {
-        no->esq = rotacaoEsquerda(no->esq);                 // Gira o filho para a esquerda primeiro
-        return rotacaoDireita(no);                          // Depois gira o pai para a direita
+        no->esq = rotacaoEsquerda(no->esq);                 // gira o filho para a esquerda primeiro
+        return rotacaoDireita(no);                          // depois gira o pai para a direita
     }
-    // Caso 4: Pesado na direita, mas inseriu na esquerda do filho (Rotação dupla Direita-Esquerda)
+    // caso 4: pesado na direita, mas inseriu na esquerda do filho (rotação dupla direita-esquerda)
     if (balance < -1 && id < no->dir->id) {
-        no->dir = rotacaoDireita(no->dir);                  // Gira o filho para a direita primeiro
-        return rotacaoEsquerda(no);                         // Depois gira o pai para a esquerda
+        no->dir = rotacaoDireita(no->dir);                  // gira o filho para a direita primeiro
+        return rotacaoEsquerda(no);                         // depois gira o pai para a esquerda
     }
 
-    return no;                                              // Devolve o nó sem mudanças se já estiver equilibrado
+    return no;                                              // devolve o nó sem mudanças se já estiver equilibrado
 }
 
-// Procura um cão específico na AVL pelo ID
+// procura um cão específico na avl pelo id
 NoAVL* buscarAVL(NoAVL* raiz, int id) {
-    if (raiz == NULL || raiz->id == id) {   // Se a árvore acabou (não achou) ou se achou o ID exato
-        return raiz;                        // Retorna o próprio nó (ou NULL se não existir)
+    if (raiz == NULL || raiz->id == id) {   // se a árvore acabou (não achou) ou se achou o id exato
+        return raiz;                        // retorna o próprio nó (ou null se não existir)
     }
-    if (id < raiz->id) {                    // Se o ID procurado for menor que o nó atual
-        return buscarAVL(raiz->esq, id);    // Procura do lado esquerdo
-    } else {                                // Se for maior
-        return buscarAVL(raiz->dir, id);    // Procura do lado direito
+    if (id < raiz->id) {                    // se o id procurado for menor que o nó atual
+        return buscarAVL(raiz->esq, id);    // procura do lado esquerdo
+    } else {                                // se for maior
+        return buscarAVL(raiz->dir, id);    // procura do lado direito
     }
 }
 
-// Acha o nó com o menor ID (usado na hora de remover um nó com dois filhos)
+// acha o nó com o menor id (usado na hora de remover um nó com dois filhos)
 NoAVL* menorValorNo(NoAVL* no) {
-    NoAVL* atual = no;                      // Começa pelo nó recebido
-    while (atual->esq != NULL) {            // Enquanto houver filho na esquerda
-        atual = atual->esq;                 // Vai descendo para a esquerda (onde ficam os menores valores)
+    NoAVL* atual = no;                      // começa pelo nó recebido
+    while (atual->esq != NULL) {            // enquanto houver filho na esquerda
+        atual = atual->esq;                 // vai descendo para a esquerda (onde ficam os menores valores)
     }
-    return atual;                           // Retorna o menor nó encontrado
+    return atual;                           // retorna o menor nó encontrado
 }
 
-// Remove um cão da árvore AVL e rebalanceia se for necessário
+// remove um cão da árvore avl e rebalanceia se for necessário
 NoAVL* removerAVL(NoAVL* raiz, int id) {
-    if (raiz == NULL) {                                     // Se a árvore estiver vazia ou não achar o ID
-        return raiz;                                        // Retorna NULL mesmo
+    if (raiz == NULL) {                                     // se a árvore estiver vazia ou não achar o id
+        return raiz;                                        // retorna null mesmo
     }
 
-    if (id < raiz->id) {                                    // Se o ID que queremos apagar está na esquerda
-        raiz->esq = removerAVL(raiz->esq, id);              // Chama a remoção para o lado esquerdo
-    } else if (id > raiz->id) {                             // Se o ID está na direita
-        raiz->dir = removerAVL(raiz->dir, id);              // Chama a remoção para o lado direito
-    } else {                                                // Achamos o nó que deve ser removido!
-        if ((raiz->esq == NULL) || (raiz->dir == NULL)) {   // Se o nó tiver apenas 1 filho ou nenhum
-            NoAVL *temp;                                    // Cria um ponteiro auxiliar
-            if (raiz->esq != NULL) {                        // Se o filho que existe for o da esquerda
+    if (id < raiz->id) {                                    // se o id que queremos apagar está na esquerda
+        raiz->esq = removerAVL(raiz->esq, id);              // chama a remoção para o lado esquerdo
+    } else if (id > raiz->id) {                             // se o id está na direita
+        raiz->dir = removerAVL(raiz->dir, id);              // chama a remoção para o lado direito
+    } else {                                                // achamos o nó que deve ser removido!
+        if ((raiz->esq == NULL) || (raiz->dir == NULL)) {   // se o nó tiver apenas 1 filho ou nenhum
+            NoAVL *temp;                                    // cria um ponteiro auxiliar
+            if (raiz->esq != NULL) {                        // se o filho que existe for o da esquerda
                 temp = raiz->esq;                           // 'temp' aponta para o filho da esquerda
-            } else {                                        // Caso contrário
-                temp = raiz->dir;                           // 'temp' aponta para o da direita (que pode até ser NULL)
+            } else {                                        // caso contrário
+                temp = raiz->dir;                           // 'temp' aponta para o da direita (que pode até ser null)
             }
 
-            if (temp == NULL) {                             // Se não tinha filho nenhum (nó folha)
+            if (temp == NULL) {                             // se não tinha filho nenhum (nó folha)
                 temp = raiz;                                // 'temp' guarda o nó atual para limparmos da memória
-                raiz = NULL;                                // O lugar dele fica vazio
-            } else {                                        // Se tinha 1 filho
-                *raiz = *temp;                              // Copia todos os dados do filho para o lugar do pai
+                raiz = NULL;                                // o lugar dele fica vazio
+            } else {                                        // se tinha 1 filho
+                *raiz = *temp;                              // copia todos os dados do filho para o lugar do pai
             }
-            free(temp);                                     // Libera a memória do nó apagado
-        } else {                                            // Se o nó tiver os 2 filhos
-            NoAVL* temp = menorValorNo(raiz->dir);          // Pega o menor nó do lado direito para substituir
-            raiz->id = temp->id;                            // Copia o ID do substituto
-            strcpy(raiz->nome, temp->nome);                 // Copia o nome do substituto
-            strcpy(raiz->raca, temp->raca);                 // Copia a raça do substituto
-            raiz->idade = temp->idade;                      // Copia a idade do substituto
-            raiz->dir = removerAVL(raiz->dir, temp->id);    // Remove o nó substituto que ficou duplicado lá embaixo
+            free(temp);                                     // libera a memória do nó apagado
+        } else {                                            // se o nó tiver os 2 filhos
+            NoAVL* temp = menorValorNo(raiz->dir);          // pega o menor nó do lado direito para substituir
+            raiz->id = temp->id;                            // copia o id do substituto
+            strcpy(raiz->nome, temp->nome);                 // copia o nome do substituto
+            strcpy(raiz->raca, temp->raca);                 // copia a raça do substituto
+            raiz->idade = temp->idade;                      // copia a idade do substituto
+            raiz->dir = removerAVL(raiz->dir, temp->id);    // remove o nó substituto que ficou duplicado lá embaixo
         }
     }
 
-    if (raiz == NULL) {                                     // Se a árvore ficou vazia após apagar o único nó
-        return raiz;                                        // Já retorna NULL direto
+    if (raiz == NULL) {                                     // se a árvore ficou vazia após apagar o único nó
+        return raiz;                                        // já retorna null direto
     }
 
-    // Atualiza a altura do nó atual
+    // atualiza a altura do nó atual
     raiz->altura = 1 + maior(alturaAVL(raiz->esq), alturaAVL(raiz->dir));
 
-    // Calcula o fator de balanceamento para ver se entortou após a remoção
+    // calcula o fator de balanceamento para ver se entortou após a remoção
     int balance = fatorBalanceamento(raiz);
 
-    // Rebalanceia com as 4 rotações caso tenha saído do limite (-1, 0, 1)
+    // rebalanceia com as 4 rotações caso tenha saído do limite (-1, 0, 1)
     if (balance > 1 && fatorBalanceamento(raiz->esq) >= 0) {
         return rotacaoDireita(raiz);
     }
@@ -196,244 +196,236 @@ NoAVL* removerAVL(NoAVL* raiz, int id) {
         return rotacaoEsquerda(raiz);
     }
 
-    return raiz;                                            // Devolve a raiz atualizada e balanceada
+    return raiz;                                            // devolve a raiz atualizada e balanceada
 }
 
-// Imprime todos os cães em ordem crescente de ID
+// imprime todos os cães em ordem crescente de id
 void emOrdemAVL(NoAVL* raiz) {
-    if (raiz != NULL) {                                     // Se o nó não for nulo
-        emOrdemAVL(raiz->esq);                              // Visita primeiro todos os menores (esquerda)
-        printf("[ID: %d] Nome: %s | Raca: %s | Idade: %d ano(s)\n", raiz->id, raiz->nome, raiz->raca, raiz->idade); // Mostra na tela
-        emOrdemAVL(raiz->dir);                              // Visita depois todos os maiores (direita)
+    if (raiz != NULL) {                                     // se o nó não for nulo
+        emOrdemAVL(raiz->esq);                              // visita primeiro todos os menores (esquerda)
+        printf("ID: %d | Nome: %s | Raça: %s | Idade: %d ano(s)\n", raiz->id, raiz->nome, raiz->raca, raiz->idade); // mostra na tela
+        emOrdemAVL(raiz->dir);                              // visita depois todos os maiores (direita)
     }
 }
 
-// Conta quantos cães estão cadastrados na árvore no total (para o relatório)
+// conta quantos cães estão cadastrados na árvore no total (para o relatório)
 int contarCaesAVL(NoAVL* raiz) {
-    if (raiz == NULL) {                                     // Se chegou numa ponta vazia
-        return 0;                                           // Soma zero
-    } else {                                                // Se tem um cão aqui
-        return 1 + contarCaesAVL(raiz->esq) + contarCaesAVL(raiz->dir); // Conta 1 (ele mesmo) + os da esquerda + os da direita
+    if (raiz == NULL) {                                     // se chegou numa ponta vazia
+        return 0;                                           // soma zero
+    } else {                                                // se tem um cão aqui
+        return 1 + contarCaesAVL(raiz->esq) + contarCaesAVL(raiz->dir); // conta 1 (ele mesmo) + os da esquerda + os da direita
     }
 }
 
-// ==========================================
-// FUNÇÕES DA ABB (Estoque de Suprimentos)
-// ==========================================
 
-// Insere um item no estoque usando uma Árvore de Busca Binária (ABB)
+// funções da abb (estoque de suprimentos)
+// insere um item no estoque usando uma árvore de busca binária (abb)
 NoABB* inserirABB(NoABB* raiz, int codigo, char* item, int quantidade) {
-    if (raiz == NULL) {                                     // Se encontrou a posição vazia na árvore
-        NoABB* novo = (NoABB*)malloc(sizeof(NoABB));        // Aloca memória para o novo item de estoque
-        novo->codigo = codigo;                              // Salva o código do item
-        strcpy(novo->item, item);                           // Salva o nome do produto
-        novo->quantidade = quantidade;                      // Salva a quantidade inicial
-        novo->esq = NULL;                                   // Inicia ponteiro esquerdo vazio
-        novo->dir = NULL;                                   // Inicia ponteiro direito vazio
-        return novo;                                        // Retorna o novo nó criado
+    if (raiz == NULL) {                                     // se encontrou a posição vazia na árvore
+        NoABB* novo = (NoABB*)malloc(sizeof(NoABB));        // aloca memória para o novo item de estoque
+        novo->codigo = codigo;                              // salva o código do item
+        strcpy(novo->item, item);                           // salva o nome do produto
+        novo->quantidade = quantidade;                      // salva a quantidade inicial
+        novo->esq = NULL;                                   // inicia ponteiro esquerdo vazio
+        novo->dir = NULL;                                   // inicia ponteiro direito vazio
+        return novo;                                        // retorna o novo nó criado
     }
-    if (codigo < raiz->codigo) {                            // Se o código for menor que o atual
-        raiz->esq = inserirABB(raiz->esq, codigo, item, quantidade); // Vai para a esquerda
-    } else if (codigo > raiz->codigo) {                     // Se o código for maior que o atual
-        raiz->dir = inserirABB(raiz->dir, codigo, item, quantidade); // Vai para a direita
+    if (codigo < raiz->codigo) {                            // se o código for menor que o atual
+        raiz->esq = inserirABB(raiz->esq, codigo, item, quantidade); // vai para a esquerda
+    } else if (codigo > raiz->codigo) {                     // se o código for maior que o atual
+        raiz->dir = inserirABB(raiz->dir, codigo, item, quantidade); // vai para a direita
     }
-    return raiz;                                            // Retorna a raiz sem alterar se o código já existir
+    return raiz;                                            // retorna a raiz sem alterar se o código já existir
 }
 
-// Busca um produto no estoque pelo código na ABB
+// busca um produto no estoque pelo código na abb
 NoABB* buscarABB(NoABB* raiz, int codigo) {
-    if (raiz == NULL || raiz->codigo == codigo) {           // Se não achou ou se é exatamente este nó
-        return raiz;                                        // Retorna o resultado
+    if (raiz == NULL || raiz->codigo == codigo) {           // se não achou ou se é exatamente este nó
+        return raiz;                                        // retorna o resultado
     }
-    if (codigo < raiz->codigo) {                            // Se o código buscado for menor
-        return buscarABB(raiz->esq, codigo);                // Busca na subárvore esquerda
-    } else {                                                // Se for maior
-        return buscarABB(raiz->dir, codigo);                // Busca na subárvore direita
+    if (codigo < raiz->codigo) {                            // se o código buscado for menor
+        return buscarABB(raiz->esq, codigo);                // busca na subárvore esquerda
+    } else {                                                // se for maior
+        return buscarABB(raiz->dir, codigo);                // busca na subárvore direita
     }
 }
 
-// Lista o estoque em ordem crescente de código
+// lista o estoque em ordem crescente de código
 void emOrdemABB(NoABB* raiz) {
-    if (raiz != NULL) {                                     // Se o nó existe
-        emOrdemABB(raiz->esq);                              // Imprime primeiro os códigos menores
-        printf("[Cod: %d] Item: %s | Qtd: %d\n", raiz->codigo, raiz->item, raiz->quantidade); // Mostra o item
-        emOrdemABB(raiz->dir);                              // Imprime depois os códigos maiores
+    if (raiz != NULL) {                                     // se o nó existe
+        emOrdemABB(raiz->esq);                              // imprime primeiro os códigos menores
+        printf("Código: %d | Item: %s | Quantidade: %d\n", raiz->codigo, raiz->item, raiz->quantidade); // mostra o item
+        emOrdemABB(raiz->dir);                              // imprime depois os códigos maiores
     }
 }
 
-// Conta quantos tipos de itens existem cadastrados na ABB do estoque
+// conta quantos tipos de itens existem cadastrados na abb do estoque
 int contarItensABB(NoABB* raiz) {
-    if (raiz == NULL) {                                     // Se o nó for vazio
-        return 0;                                           // Retorna 0
-    } else {                                                // Se o nó existir
-        return 1 + contarItensABB(raiz->esq) + contarItensABB(raiz->dir); // Soma 1 com os filhos dos dois lados
+    if (raiz == NULL) {                                     // se o nó for vazio
+        return 0;                                           // retorna 0
+    } else {                                                // se o nó existir
+        return 1 + contarItensABB(raiz->esq) + contarItensABB(raiz->dir); // soma 1 com os filhos dos dois lados
     }
 }
 
-// ==========================================
-// FUNÇÕES DA FILA (Atendimento Veterinário)
-// ==========================================
 
-// Prepara a fila para uso deixando os ponteiros zerados
+// funções da fila (atendimento veterinário)
+// prepara a fila para uso deixando os ponteiros zerados
 void inicializarFila(FilaEspera *f) {
-    f->inicio = NULL;                                       // Começo da fila aponta para nada
-    f->fim = NULL;                                          // Fim da fila aponta para nada
+    f->inicio = NULL;                                       // começo da fila aponta para nada
+    f->fim = NULL;                                          // fim da fila aponta para nada
 }
 
-// Coloca um cão no final da fila de atendimento
+// coloca um cão no final da fila de atendimento
 void enfileirar(FilaEspera *f, char* nomeCao, char* motivo) {
-    NoFila *novo = (NoFila*)malloc(sizeof(NoFila));         // Cria espaço na memória para o atendimento
-    strcpy(novo->nomeCao, nomeCao);                         // Guarda o nome do cão
-    strcpy(novo->motivo, motivo);                           // Guarda o motivo da consulta
-    novo->prox = NULL;                                      // Como ele é o último da fila, não tem ninguém atrás dele
+    NoFila *novo = (NoFila*)malloc(sizeof(NoFila));         // cria espaço na memória para o atendimento
+    strcpy(novo->nomeCao, nomeCao);                         // guarda o nome do cão
+    strcpy(novo->motivo, motivo);                           // guarda o motivo da consulta
+    novo->prox = NULL;                                      // como ele é o último da fila, não tem ninguém atrás dele
 
-    if (f->fim == NULL) {                                   // Se a fila estava totalmente vazia
-        f->inicio = novo;                                   // Ele passa a ser o primeiro da fila também
-    } else {                                                // Se já tinha gente na fila
-        f->fim->prox = novo;                                // O antigo último agora aponta para esse novo cão
+    if (f->fim == NULL) {                                   // se a fila estava totalmente vazia
+        f->inicio = novo;                                   // ele passa a ser o primeiro da fila também
+    } else {                                                // se já tinha gente na fila
+        f->fim->prox = novo;                                // o antigo último agora aponta para esse novo cão
     }
-    f->fim = novo;                                          // Atualiza o ponteiro de fim para o novo cão
-    printf("-> Cao '%s' entrou na fila de espera.\n", nomeCao); // Avisa na tela
+    f->fim = novo;                                          // atualiza o ponteiro de fim para o novo cão
+    printf(" Cão '%s' entrou na fila de espera.\n", nomeCao); // avisa na tela
 }
 
-// Chama o primeiro cão da fila para ser atendido e tira ele da espera
+// chama o primeiro cão da fila para ser atendido e tira ele da espera
 void desenfileirar(FilaEspera *f) {
-    if (f->inicio == NULL) {                                // Verifica se não tem ninguém esperando
-        printf("Fila de espera vazia!\n");                  // Avisa que não há cães na fila
-        return;                                             // Sai da função
+    if (f->inicio == NULL) {                                // verifica se não tem ninguém esperando
+        printf("Fila de espera vazia!\n");                  // avisa que não há cães na fila
+        return;                                             // sai da função
     }
-    NoFila *temp = f->inicio;                               // Guarda o primeiro da fila num ponteiro temporário
-    printf("-> Atendendo agora: %s (Motivo: %s)\n", temp->nomeCao, temp->motivo); // Mostra quem foi chamado
-    f->inicio = f->inicio->prox;                            // O segundo da fila vira o novo primeiro
+    NoFila *temp = f->inicio;                               // guarda o primeiro da fila num ponteiro temporário
+    printf(" Atendendo agora: %s (Motivo: %s)\n", temp->nomeCao, temp->motivo); // mostra quem foi chamado
+    f->inicio = f->inicio->prox;                            // o segundo da fila vira o novo primeiro
 
-    if (f->inicio == NULL) {                                // Se a fila acabou de ficar vazia após chamar este cão
-        f->fim = NULL;                                      // O ponteiro de fim também precisa virar NULL
+    if (f->inicio == NULL) {                                // se a fila acabou de ficar vazia após chamar este cão
+        f->fim = NULL;                                      // o ponteiro de fim também precisa virar null
     }
-    free(temp);                                             // Libera a memória do atendimento que já foi feito
+    free(temp);                                             // libera a memória do atendimento que já foi feito
 }
 
-// Mostra todos os cães que estão aguardando na fila por ordem de chegada
+// mostra todos os cães que estão aguardando na fila por ordem de chegada
 void mostrarFila(FilaEspera *f) {
-    NoFila *atual = f->inicio;                              // Começa a leitura pelo primeiro da fila
-    printf("\n--- FILA DE ESPERA VETERINARIA ---\n");       // Cabeçalho na tela
-    if (atual == NULL) {                                    // Se não tiver ninguém
-        printf("Nenhum cao aguardando atendimento.\n");     // Avisa o usuário
-        return;                                             // Sai da função
+    NoFila *atual = f->inicio;                              // começa a leitura pelo primeiro da fila
+    printf("\n FILA DE ESPERA VETERINÁRIA \n");       // cabeçalho na tela
+    if (atual == NULL) {                                    // se não tiver ninguém
+        printf("Nenhum cão aguardando atendimento.\n");     // avisa o usuário
+        return;                                             // sai da função
     }
-    int pos = 1;                                            // Variável para numerar a posição na fila (1º, 2º...)
-    while (atual != NULL) {                                 // Enquanto não chegar ao final da fila
-        printf("%d. Cao: %s | Motivo: %s\n", pos, atual->nomeCao, atual->motivo); // Imprime os dados do cão
-        pos = pos + 1;                                      // Aumenta o número da posição
-        atual = atual->prox;                                // Passa para o próximo da fila
+    int pos = 1;                                            // variável para numerar a posição na fila (1º, 2º...)
+    while (atual != NULL) {                                 // enquanto não chegar ao final da fila
+        printf("%d. Cão: %s | Motivo: %s\n", pos, atual->nomeCao, atual->motivo); // imprime os dados do cão
+        pos = pos + 1;                                      // aumenta o número da posição
+        atual = atual->prox;                                // passa para o próximo da fila
     }
 }
 
-// Conta quantos cães estão esperando atendimento no momento
+// conta quantos cães estão esperando atendimento no momento
 int contarFila(FilaEspera *f) {
-    int cont = 0;                                           // Começa o contador em zero
-    NoFila *atual = f->inicio;                              // Começa pelo início da fila
-    while (atual != NULL) {                                 // Percorre até o final
-        cont = cont + 1;                                    // Soma 1 para cada cão encontrado
-        atual = atual->prox;                                // Vai para o próximo
+    int cont = 0;                                           // começa o contador em zero
+    NoFila *atual = f->inicio;                              // começa pelo início da fila
+    while (atual != NULL) {                                 // percorre até o final
+        cont = cont + 1;                                    // soma 1 para cada cão encontrado
+        atual = atual->prox;                                // vai para o próximo
     }
-    return cont;                                            // Devolve o total contado
+    return cont;                                            // devolve o total contado
 }
 
-// ==========================================
-// FUNÇÕES DA PILHA (Histórico / Undo)
-// ==========================================
 
-// Registra uma ação nova no topo da pilha de histórico
+// funções da pilha (histórico / undo)
+// registra uma ação nova no topo da pilha de histórico
 void empilhar(NoPilha **topo, char* descricao) {
-    NoPilha *novo = (NoPilha*)malloc(sizeof(NoPilha));      // Aloca memória para o registro do histórico
-    strcpy(novo->descricao, descricao);                     // Copia o texto do que foi feito
-    novo->prox = *topo;                                     // Faz o novo item apontar para o antigo topo da pilha
-    *topo = novo;                                           // Atualiza o topo para ser este novo item
+    NoPilha *novo = (NoPilha*)malloc(sizeof(NoPilha));      // aloca memória para o registro do histórico
+    strcpy(novo->descricao, descricao);                     // copia o texto do que foi feito
+    novo->prox = *topo;                                     // faz o novo item apontar para o antigo topo da pilha
+    *topo = novo;                                           // atualiza o topo para ser este novo item
 }
 
-// Remove a última ação colocada na pilha (Desfazer)
+// remove a última ação colocada na pilha (desfazer)
 void desempilhar(NoPilha **topo) {
-    if (*topo == NULL) {                                    // Se a pilha estiver vazia
-        printf("Nenhuma acao no historico para desfazer.\n"); // Avisa que não tem nada para remover
-        return;                                             // Sai da função
+    if (*topo == NULL) {                                    // se a pilha estiver vazia
+        printf("Nenhuma ação no histórico para desfazer.\n"); // avisa que não tem nada para remover
+        return;                                             // sai da função
     }
-    NoPilha *temp = *topo;                                  // Guarda o item do topo para poder apagar
-    printf("-> Acao desfeita/removida do log: %s\n", temp->descricao); // Mostra qual ação foi desfeita
-    *topo = temp->prox;                                     // O topo passa a ser o item que estava logo abaixo
-    free(temp);                                             // Libera a memória do item removido
+    NoPilha *temp = *topo;                                  // guarda o item do topo para poder apagar
+    printf("-> Ação desfeita/removida do log: %s\n", temp->descricao); // mostra qual ação foi desfeita
+    *topo = temp->prox;                                     // o topo passa a ser o item que estava logo abaixo
+    free(temp);                                             // libera a memória do item removido
 }
 
-// Lista todo o histórico, do mais recente para o mais antigo
+// lista tod0 o histórico, do mais recente para o mais antigo
 void mostrarPilha(NoPilha *topo) {
-    printf("\n--- HISTORICO DE ACOES (DO MAIS RECENTE AO MAIS ANTIGO) ---\n");
-    if (topo == NULL) {                                     // Se não houve nenhuma ação ainda
-        printf("Historico vazio.\n");                       // Informa na tela
-        return;                                             // Sai da função
+    printf("\n HISTÓRICO DE AÇÕES (DO MAIS RECENTE AO MAIS ANTIGO) \n");
+    if (topo == NULL) {                                     // se não houve nenhuma ação ainda
+        printf("Histórico vazio.\n");                 // informa na tela
+        return;                                             // sai da função
     }
-    NoPilha *atual = topo;                                  // Começa pelo topo da pilha
-    while (atual != NULL) {                                 // Enquanto houver itens para baixo
-        printf("- %s\n", atual->descricao);                 // Imprime a descrição da ação
-        atual = atual->prox;                                // Desce para o próximo item da pilha
+    NoPilha *atual = topo;                                  // começa pelo topo da pilha
+    while (atual != NULL) {                                 // enquanto houver itens para baixo
+        printf("- %s\n", atual->descricao);                 // imprime a descrição da ação
+        atual = atual->prox;                                // desce para o próximo item da pilha
     }
 }
 
-// ==========================================
-// PERSISTÊNCIA DE DADOS (Arquivos TXT)
-// ==========================================
 
-// Função auxiliar que percorre a árvore AVL gravando cada cão no arquivo
+// persistência de dados (arquivos txt)
+// função auxiliar que percorre a árvore avl gravando cada cão no arquivo
 void salvarAuxAVL(NoAVL *raiz, FILE *f) {
-    if (raiz != NULL) {                                     // Se o nó existe
-        fprintf(f, "%d %s %s %d\n", raiz->id, raiz->nome, raiz->raca, raiz->idade); // Escreve os dados numa linha do arquivo
-        salvarAuxAVL(raiz->esq, f);                         // Faz o mesmo para os filhos da esquerda
-        salvarAuxAVL(raiz->dir, f);                         // Faz o mesmo para os filhos da direita
+    if (raiz != NULL) {                                     // se o nó existe
+        fprintf(f, "%d %s %s %d\n", raiz->id, raiz->nome, raiz->raca, raiz->idade); // escreve os dados numa linha do arquivo
+        salvarAuxAVL(raiz->esq, f);                         // faz o mesmo para os filhos da esquerda
+        salvarAuxAVL(raiz->dir, f);                         // faz o mesmo para os filhos da direita
     }
 }
 
-// Função auxiliar que percorre a árvore ABB gravando cada item de estoque no arquivo
+// função auxiliar que percorre a árvore abb gravando cada item de estoque no arquivo
 void salvarAuxABB(NoABB *raiz, FILE *f) {
-    if (raiz != NULL) {                                     // Se o nó existe
-        fprintf(f, "%d %s %d\n", raiz->codigo, raiz->item, raiz->quantidade); // Escreve código, nome e quantidade no arquivo
-        salvarAuxABB(raiz->esq, f);                         // Grava a subárvore esquerda
-        salvarAuxABB(raiz->dir, f);                         // Grava a subárvore direita
+    if (raiz != NULL) {                                     // se o nó existe
+        fprintf(f, "%d %s %d\n", raiz->codigo, raiz->item, raiz->quantidade); // escreve código, nome e quantidade no arquivo
+        salvarAuxABB(raiz->esq, f);                         // grava a subárvore esquerda
+        salvarAuxABB(raiz->dir, f);                         // grava a subárvore direita
     }
 }
 
-// Salva todos os cães e itens de estoque em arquivos de texto antes de fechar
+// salva todos os cães e itens de estoque em arquivos de texto antes de fechar
 void salvarDados(NoAVL *caes, NoABB *estoque) {
-    FILE *fCaes = fopen("caes.txt", "w");                   // Abre (ou cria) o arquivo caes.txt para escrita
-    if (fCaes != NULL) {                                    // Se conseguiu abrir o arquivo sem erro
-        salvarAuxAVL(caes, fCaes);                          // Chama a função que escreve todos os cães lá dentro
-        fclose(fCaes);                                      // Fecha o arquivo para salvar de verdade no disco
+    FILE *fCaes = fopen("caes.txt", "w");                   // abre (ou cria) o arquivo caes.txt para escrita
+    if (fCaes != NULL) {                                    // se conseguiu abrir o arquivo sem erro
+        salvarAuxAVL(caes, fCaes);                          // chama a função que escreve todos os cães lá dentro
+        fclose(fCaes);                                      // fecha o arquivo para salvar de verdade no disco
     }
 
-    FILE *fEstoque = fopen("estoque.txt", "w");             // Abre (ou cria) o arquivo estoque.txt para escrita
-    if (fEstoque != NULL) {                                 // Se abriu tudo certo
-        salvarAuxABB(estoque, fEstoque);                    // Grava todos os itens da árvore ABB de estoque
-        fclose(fEstoque);                                   // Fecha o arquivo
+    FILE *fEstoque = fopen("estoque.txt", "w");             // abre (ou cria) o arquivo estoque.txt para escrita
+    if (fEstoque != NULL) {                                 // se abriu tudo certo
+        salvarAuxABB(estoque, fEstoque);                    // grava todos os itens da árvore abb de estoque
+        fclose(fEstoque);                                   // fecha o arquivo
     }
-    printf("Dados salvos com sucesso em 'caes.txt' e 'estoque.txt'!\n"); // Confirma para o usuário
+    printf("Os dados foram salvos com sucesso em 'caes.txt' e 'estoque.txt'!\n"); // confirma para o usuário
 }
 
-// Lê os arquivos de texto ao abrir o programa para recuperar os cadastros anteriores
+// lê os arquivos de texto ao abrir o programa para recuperar os cadastros anteriores
 void carregarDados(NoAVL **caes, NoABB **estoque) {
-    FILE *fCaes = fopen("caes.txt", "r");                   // Tenta abrir o arquivo de cães em modo leitura ("r")
-    if (fCaes != NULL) {                                    // Se o arquivo já existir no computador
-        int id, idade;                                      // Variáveis para ler os números
-        char nome[50], raca[40];                            // Variáveis para ler os textos
-        while (fscanf(fCaes, "%d %s %s %d", &id, nome, raca, &idade) == 4) { // Lê linha por linha enquanto achar os 4 dados
-            *caes = inserirAVL(*caes, id, nome, raca, idade); // Insere cada cão lido de volta na árvore AVL
+    FILE *fCaes = fopen("caes.txt", "r");                   // tenta abrir o arquivo de cães em modo leitura ("r")
+    if (fCaes != NULL) {                                    // se o arquivo já existir no computador
+        int id, idade;                                      // variáveis para ler os números
+        char nome[50], raca[40];                            // variáveis para ler os textos
+        while (fscanf(fCaes, "%d %s %s %d", &id, nome, raca, &idade) == 4) { // lê linha por linha enquanto achar os 4 dados
+            *caes = inserirAVL(*caes, id, nome, raca, idade); // insere cada cão lido de volta na árvore avl
         }
-        fclose(fCaes);                                      // Fecha o arquivo após terminar a leitura
+        fclose(fCaes);                                      // fecha o arquivo após terminar a leitura
     }
 
-    FILE *fEstoque = fopen("estoque.txt", "r");             // Tenta abrir o arquivo de estoque para leitura
-    if (fEstoque != NULL) {                                 // Se o arquivo existir
-        int codigo, qtd;                                    // Variáveis para código e quantidade
-        char item[50];                                      // Variável para o nome do produto
-        while (fscanf(fEstoque, "%d %s %d", &codigo, item, &qtd) == 3) { // Lê cada linha do arquivo
-            *estoque = inserirABB(*estoque, codigo, item, qtd); // Coloca o produto de volta na árvore ABB
+    FILE *fEstoque = fopen("estoque.txt", "r");   // tenta abrir o arquivo de estoque para leitura
+    if (fEstoque != NULL) {                                 // se o arquivo existir
+        int codigo, qtd;                                    // variáveis para código e quantidade
+        char item[50];                                      // variável para o nome do produto
+        while (fscanf(fEstoque, "%d %s %d", &codigo, item, &qtd) == 3) { // lê cada linha do arquivo
+            *estoque = inserirABB(*estoque, codigo, item, qtd); // coloca o produto de volta na árvore abb
         }
-        fclose(fEstoque);                                   // Fecha o arquivo de estoque
+        fclose(fEstoque);                                   // fecha o arquivo de estoque
     }
 }

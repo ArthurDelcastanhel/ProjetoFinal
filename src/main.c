@@ -4,29 +4,55 @@
 
 int main() {
     NoAVL *caes = NULL;
-    NoABP *estoque = NULL;
+    NoABB *estoque = NULL;
     FilaEspera fila;
     inicializarFila(&fila);
     NoPilha *pilhaHistorico = NULL;
 
-    // Escolhi alguns dados aleatórios só para fazer um teste
-    caes = inserirAVL(caes, 101, "Bob", "Labrador", 3);
-    caes = inserirAVL(caes, 102, "Mel", "Poodle", 5);
-    estoque = inserirABP(estoque, 50, "Racao_15kg", 10);
+    // carrega os dados salvos caso já exista algum arquivo de execuções anteriores
+    carregarDados(&caes, &estoque);
+
+    // se não houver nenhum cão cadastrado ainda, permite que você crie os iniciais
+    if (caes == NULL) {
+        int qtdInicial;
+        printf("Quantos caes iniciais voce deseja cadastrar agora? (Digite 0 para pular): ");
+        scanf("%d", &qtdInicial);
+
+        int i = 0;
+        while (i < qtdInicial) {
+            int id, idade;
+            char nome[50], raca[40];
+
+            printf("\n--- Cadastro Inicial %d ---\n", i + 1);
+            printf("ID/Microchip: ");
+            scanf("%d", &id);
+            printf("Nome do cao (sem espacos): ");
+            scanf("%s", nome);
+            printf("Raca (sem espacos): ");
+            scanf("%s", raca);
+            printf("Idade: ");
+            scanf("%d", &idade);
+
+            caes = inserirAVL(caes, id, nome, raca, idade);
+            i = i + 1;
+        }
+    }
 
     int opcao;
     do {
         printf("\n==============================\n");
         printf("   CANIL - GESTÃO \n");
         printf("==============================\n");
-        printf("1. Cadastrar Cão \n");
+        printf("1. Cadastrar Cão\n");
         printf("2. Listar Cães Cadastrados\n");
-        printf("3. Adicionar à Fila de Espera (Fila)\n");
+        printf("3. Adicionar a Fila de Espera\n");
         printf("4. Chamar Próximo Atendimento\n");
         printf("5. Ver Fila de Espera\n");
         printf("6. Ver Historico de Ações\n");
         printf("7. Desfazer Ultima Ação\n");
-        printf("8. Salvar Dados (Persistência)\n");
+        printf("8. Cadastrar Item no Estoque (ABB)\n");
+        printf("9. Listar Estoque\n");
+        printf("10. Salvar Dados\n");
         printf("0. Sair\n");
         printf("Escolha uma opção: ");
         scanf("%d", &opcao);
@@ -35,7 +61,7 @@ int main() {
             case 1: {
                 int id, idade;
                 char nome[50], raca[40];
-                printf("ID/Microchip: ");
+                printf("ID: ");
                 scanf("%d", &id);
                 printf("Nome do cão: ");
                 scanf("%s", nome);
@@ -63,7 +89,7 @@ int main() {
                 scanf("%s", motivo);
                 enfileirar(&fila, nome, motivo);
                 char acao[100];
-                sprintf(acao, "Adicionado %s à fila", nome);
+                sprintf(acao, "Adicionado %s a fila", nome);
                 empilhar(&pilhaHistorico, acao);
                 break;
             }
@@ -79,8 +105,29 @@ int main() {
             case 7:
                 desempilhar(&pilhaHistorico);
                 break;
-            case 8:
-                salvarDados(estoque);
+            case 8: {
+                int codigo, qtd;
+                char item[50];
+                printf("Código do item: ");
+                scanf("%d", &codigo);
+                printf("Nome do item (sem espaços): ");
+                scanf("%s", item);
+                printf("Quantidade: ");
+                scanf("%d", &qtd);
+
+                estoque = inserirABB(estoque, codigo, item, qtd);
+                char acao[100];
+                sprintf(acao, "Adicionado %s ao estoque", item);
+                empilhar(&pilhaHistorico, acao);
+                printf("Item cadastrado no estoque!\n");
+                break;
+            }
+            case 9:
+                printf("\n ESTOQUE DO CANIL \n");
+                emOrdemABB(estoque);
+                break;
+            case 10:
+                salvarDados(caes, estoque);
                 break;
             case 0:
                 printf("Encerrando o sistema...\n");
