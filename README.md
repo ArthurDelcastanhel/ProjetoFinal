@@ -1,14 +1,15 @@
 # Sistema de Gestão para Canil
 
 ## Descrição do projeto
-Sistema em linguagem C para gestão de abrigos de animais, controlando cadastros, filas de atendimento, estoque e histórico de ações.
+* Sistema em linguagem C para gestão de abrigos de animais, controlando cadastros, filas de atendimento, estoque e histórico de ações.
 
 ## Instituição escolhida
 * **Instituição:** Fictícia (Não obtive um retorno positivo (consentimento) da ONG desejada.)
 * **Atuação:** Resgate, reabilitação e controle de cães abandonados e adoções.
 
 ## Justificativa
-Necessidade de facilitar o atendimento veterinário e organizar o cadastro de animais para evitar perdas de registros.
+* Necessidade de facilitar o atendimento veterinário e organizar o cadastro de animais para evitar perdas de registros.
+* Falta estruturar as operação de busca e remoção da árvore
 
 ## Fontes de pesquisas realizadas
 * Artigo de Simone Nascimento destacando o excesso de animais abandonados nos abrigos para animais:
@@ -16,10 +17,10 @@ Necessidade de facilitar o atendimento veterinário e organizar o cadastro de an
 * Utilizado o auxílio de AI (Gemini AI) para compreender o conceito e implementação de rotação de subárvores e balanceamento.
 
 ## Funcionalidades do sistema
-* Cadastro, listagem e busca de cães.
-* Fila de espera para atendimento veterinário.
-* Histórico de ações com suporte a desfazer.
-* Persistência simples de dados em arquivo texto.
+* Árvore AVL para realizar o cadastro, listagem e busca de cães. (ainda preciso fazer remoção e busca)
+* Fila para realizar fila de espera para atendimento veterinário.
+* Pilha para estruturar histórico de ações com suporte a desfazer.
+* Manipulação de arquivos Persistência simples de dados em arquivo texto.
 
 ## Estruturas de dados utilizadas
 
