@@ -85,7 +85,7 @@ int main() {
                 scanf("%s", nome);
                 printf("Raça: ");
                 scanf("%s", raca);
-                printf("Idade: ");
+                printf("Idade: "); // possibilitar colocar meses
                 scanf("%d", &idade);
 
                 caes = inserirAVL(caes, id, nome, raca, idade);
