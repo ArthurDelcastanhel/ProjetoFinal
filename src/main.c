@@ -16,7 +16,11 @@ int main() {
     if (caes == NULL) {
         int qtdInicial;
         printf("Quantos cães iniciais voce deseja cadastrar agora? (Digite 0 para pular): ");
-        scanf("%d", &qtdInicial);
+        if (scanf("%d", &qtdInicial) != 1) {
+            int c;
+            while ((c = getchar()) != '\n' && c != EOF) {}
+            qtdInicial = 0;
+        }
 
         int i = 0;
         while (i < qtdInicial) {
@@ -55,7 +59,21 @@ int main() {
         printf("10. Salvar Dados\n");
         printf("0. Sair\n");
         printf("Escolha uma opção: ");
-        scanf("%d", &opcao);
+
+        // valida a leitura para evitar loop infinito caso entre texto ou EOF
+        // antes estava com um erro onde se eu digitasse um inteiro em um scanf que solicita string, entrava em loop infinito o menu de opções
+        int lidos = scanf("%d", &opcao);
+        if (lidos == EOF) {
+            opcao = 0;
+            printf("\nEntrada encerrada. Encerrando o sistema...\n");
+            break;
+        }
+        if (lidos != 1) {
+            int c;
+            while ((c = getchar()) != '\n' && c != EOF) {} // limpa o buffer até a quebra de linha
+            printf("Entrada inválida! Digite apenas um número.\n");
+            continue;
+        }
 
         switch(opcao) {
             case 1: {
