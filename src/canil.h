@@ -6,7 +6,8 @@ typedef struct NoAVL {
     int id;                 // código único ou número do microchip do cão
     char nome[50];          // nome do cachorro
     char raca[40];          // raça do cachorro
-    int idade;              // idade em anos
+    int idadeAnos;          // idade em anos
+    int idadeMeses;         // idade em meses (0 a 11)
     int altura;             // altura do nó na árvore pra calcular o balanceamento
     struct NoAVL *esq;      // ponteiro para o filho da esquerda (IDs menores)
     struct NoAVL *dir;      // ponteiro para o filho da direita (IDs maiores)
@@ -46,7 +47,7 @@ int maior(int a, int b);
 int fatorBalanceamento(NoAVL *n);
 NoAVL* rotacaoDireita(NoAVL *y);
 NoAVL* rotacaoEsquerda(NoAVL *x);
-NoAVL* inserirAVL(NoAVL* no, int id, char* nome, char* raca, int idade);
+NoAVL* inserirAVL(NoAVL* no, int id, char* nome, char* raca, int idadeAnos, int idadeMeses);
 NoAVL* buscarAVL(NoAVL* raiz, int id);
 NoAVL* menorValorNo(NoAVL* no);
 NoAVL* removerAVL(NoAVL* raiz, int id);
@@ -76,5 +77,8 @@ void salvarAuxAVL(NoAVL *raiz, FILE *f);
 void salvarAuxABB(NoABB *raiz, FILE *f);
 void salvarDados(NoAVL *caes, NoABB *estoque);
 void carregarDados(NoAVL **caes, NoABB **estoque);
+
+// função para salvar a última interação realizada e o exato momento (data e hora) em que foi finalizada
+void registrarEncerramentoArquivos(void);
 
 #endif

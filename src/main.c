@@ -8,6 +8,7 @@ int main() {
     FilaEspera fila;
     inicializarFila(&fila);
     NoPilha *pilhaHistorico = NULL;
+    int salvouDados = 0; // controla se os dados foram salvos nesta sessão para registrar o horário no encerramento
 
     // carrega os dados salvos caso já exista algum arquivo de execuções anteriores
     carregarDados(&caes, &estoque);
@@ -24,7 +25,7 @@ int main() {
 
         int i = 0;
         while (i < qtdInicial) {
-            int id, idade;
+            int id, anos = 0, meses = 0;
             char nome[50], raca[40];
 
             printf("\n    Cadastro Inicial %d    \n", i + 1);
@@ -34,10 +35,18 @@ int main() {
             scanf("%s", nome);
             printf("Raça (sem espaços): ");
             scanf("%s", raca);
-            printf("Idade: ");
-            scanf("%d", &idade);
+            printf("Idade - Anos (0 se apenas meses): ");
+            scanf("%d", &anos);
+            printf("Idade - Meses (0 se apenas anos): ");
+            scanf("%d", &meses);
+            if (anos < 0) anos = 0;
+            if (meses < 0) meses = 0;
+            if (meses >= 12) {
+                anos += meses / 12;
+                meses = meses % 12;
+            }
 
-            caes = inserirAVL(caes, id, nome, raca, idade);
+            caes = inserirAVL(caes, id, nome, raca, anos, meses);
             i = i + 1;
         }
     }
@@ -66,6 +75,9 @@ int main() {
         if (lidos == EOF) {
             opcao = 0;
             printf("\nEntrada encerrada. Encerrando o sistema...\n");
+            if (salvouDados) {
+                registrarEncerramentoArquivos();
+            }
             break;
         }
         if (lidos != 1) {
@@ -77,7 +89,7 @@ int main() {
 
         switch(opcao) {
             case 1: {
-                int id, idade;
+                int id, anos = 0, meses = 0;
                 char nome[50], raca[40];
                 printf("ID: ");
                 scanf("%d", &id);
@@ -85,10 +97,18 @@ int main() {
                 scanf("%s", nome);
                 printf("Raça: ");
                 scanf("%s", raca);
-                printf("Idade: "); // possibilitar colocar meses
-                scanf("%d", &idade);
+                printf("Idade - Anos (0 se apenas meses): "); // permite informar anos e/ou meses
+                scanf("%d", &anos);
+                printf("Idade - Meses (0 se apenas anos): ");
+                scanf("%d", &meses);
+                if (anos < 0) anos = 0;
+                if (meses < 0) meses = 0;
+                if (meses >= 12) {
+                    anos += meses / 12;
+                    meses = meses % 12;
+                }
 
-                caes = inserirAVL(caes, id, nome, raca, idade);
+                caes = inserirAVL(caes, id, nome, raca, anos, meses);
                 char acao[100];
                 sprintf(acao, "Cadastro do cão %s", nome);
                 empilhar(&pilhaHistorico, acao);
@@ -146,8 +166,12 @@ int main() {
                 break;
             case 10:
                 salvarDados(caes, estoque);
+                salvouDados = 1;
                 break;
             case 0:
+                if (salvouDados) {
+                    registrarEncerramentoArquivos(); // registra data e hora no final dos .txt após salvar e encerrar
+                }
                 printf("Encerrando o sistema...\n");
                 break;
             default:

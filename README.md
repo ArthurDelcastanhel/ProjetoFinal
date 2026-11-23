@@ -9,12 +9,11 @@
 
 ## Justificativa
 * Necessidade de facilitar o atendimento veterinário e organizar o cadastro de animais para evitar perdas de registros.
-* Falta estruturar as operação de busca e remoção da árvore
 
 ## Fontes de pesquisas realizadas
 * Artigo de Simone Nascimento destacando o excesso de animais abandonados nos abrigos para animais:
 (https://www.rampasuerj.com.br/post/ongs-passam-por-sobrecarga-com-excesso-de-animais-abandonados)
-* Utilizado o auxílio de AI (Gemini AI) para compreender o conceito e implementação de rotação de subárvores e balanceamento.
+* Utilizado o auxílio de AI (Gemini AI) para compreender o conceito e implementação de rotação de subárvores e balanceamento, e também para registrar em arquivos .txt a data e hora exata usando timestamp.
 
 ## Funcionalidades do sistema
 * Árvore AVL para realizar o cadastro, listagem e busca de cães. (ainda preciso fazer remoção e busca)

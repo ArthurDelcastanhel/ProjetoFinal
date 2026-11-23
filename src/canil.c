@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <time.h>
 #include "canil.h"
 
 
@@ -64,13 +65,14 @@ NoAVL* rotacaoEsquerda(NoAVL *x) {
 }
 
 // insere um novo cão na árvore avl e faz o balanceamento se precisar
-NoAVL* inserirAVL(NoAVL* no, int id, char* nome, char* raca, int idade) {
+NoAVL* inserirAVL(NoAVL* no, int id, char* nome, char* raca, int idadeAnos, int idadeMeses) {
     if (no == NULL) {                                       // se achou um lugar vazio na árvore
         NoAVL* novo = (NoAVL*)malloc(sizeof(NoAVL));        // reserva espaço na memória para o novo cão
         novo->id = id;                                      // guarda o id digitado
         strcpy(novo->nome, nome);                           // copia o nome para dentro da struct
         strcpy(novo->raca, raca);                           // copia a raça para dentro da struct
-        novo->idade = idade;                                // guarda a idade
+        novo->idadeAnos = idadeAnos;                        // guarda os anos da idade
+        novo->idadeMeses = idadeMeses;                      // guarda os meses da idade
         novo->altura = 1;                                   // tod0 nó novo começa como folha, com altura 1
         novo->esq = NULL;                                   // começa sem filho na esquerda
         novo->dir = NULL;                                   // começa sem filho na direita
@@ -78,9 +80,9 @@ NoAVL* inserirAVL(NoAVL* no, int id, char* nome, char* raca, int idade) {
     }
 
     if (id < no->id) {                                      // se o id novo for menor que o id atual
-        no->esq = inserirAVL(no->esq, id, nome, raca, idade); // continua procurando um lugar vago pelo lado esquerdo
+        no->esq = inserirAVL(no->esq, id, nome, raca, idadeAnos, idadeMeses); // continua procurando um lugar vago pelo lado esquerdo
     } else if (id > no->id) {                               // se o id novo for maior que o id atual
-        no->dir = inserirAVL(no->dir, id, nome, raca, idade); // continua procurando vaga pelo lado direito
+        no->dir = inserirAVL(no->dir, id, nome, raca, idadeAnos, idadeMeses); // continua procurando vaga pelo lado direito
     } else {                                                // se o id for igual
         return no;                                          // não faz nada, pois não aceita id repetido
     }
@@ -165,7 +167,8 @@ NoAVL* removerAVL(NoAVL* raiz, int id) {
             raiz->id = temp->id;                            // copia o id do substituto
             strcpy(raiz->nome, temp->nome);                 // copia o nome do substituto
             strcpy(raiz->raca, temp->raca);                 // copia a raça do substituto
-            raiz->idade = temp->idade;                      // copia a idade do substituto
+            raiz->idadeAnos = temp->idadeAnos;              // copia os anos do substituto
+            raiz->idadeMeses = temp->idadeMeses;            // copia os meses do substituto
             raiz->dir = removerAVL(raiz->dir, temp->id);    // remove o nó substituto que ficou duplicado lá embaixo
         }
     }
@@ -203,7 +206,8 @@ NoAVL* removerAVL(NoAVL* raiz, int id) {
 void emOrdemAVL(NoAVL* raiz) {
     if (raiz != NULL) {                                     // se o nó não for nulo
         emOrdemAVL(raiz->esq);                              // visita primeiro todos os menores (esquerda)
-        printf("ID: %d | Nome: %s | Raça: %s | Idade: %d ano(s)\n", raiz->id, raiz->nome, raiz->raca, raiz->idade); // mostra na tela
+        printf("ID: %d | Nome: %s | Raça: %s | Idade: %d ano(s) e %d mes(es)\n",
+               raiz->id, raiz->nome, raiz->raca, raiz->idadeAnos, raiz->idadeMeses); // mostra na tela
         emOrdemAVL(raiz->dir);                              // visita depois todos os maiores (direita)
     }
 }
@@ -376,7 +380,8 @@ void mostrarPilha(NoPilha *topo) {
 // função auxiliar que percorre a árvore avl gravando cada cão no arquivo
 void salvarAuxAVL(NoAVL *raiz, FILE *f) {
     if (raiz != NULL) {                                     // se o nó existe
-        fprintf(f, "%d %s %s %d\n", raiz->id, raiz->nome, raiz->raca, raiz->idade); // escreve os dados numa linha do arquivo
+        fprintf(f, "%d %s %s %d %d\n",
+                raiz->id, raiz->nome, raiz->raca, raiz->idadeAnos, raiz->idadeMeses); // escreve os dados numa linha do arquivo
         salvarAuxAVL(raiz->esq, f);                         // faz o mesmo para os filhos da esquerda
         salvarAuxAVL(raiz->dir, f);                         // faz o mesmo para os filhos da direita
     }
@@ -396,7 +401,7 @@ void salvarDados(NoAVL *caes, NoABB *estoque) {
     FILE *fCaes = fopen("caes.txt", "w");                   // abre (ou cria) o arquivo caes.txt para escrita
     if (fCaes != NULL) {                                    // se conseguiu abrir o arquivo sem erro
         salvarAuxAVL(caes, fCaes);                          // chama a função que escreve todos os cães lá dentro
-        fclose(fCaes);                                      // fecha o arquivo para salvar de verdade no disco
+        fclose(fCaes);                                      // fecha o arquivo pra salvar de verdade no disco
     }
 
     FILE *fEstoque = fopen("estoque.txt", "w");             // abre (ou cria) o arquivo estoque.txt para escrita
@@ -407,19 +412,42 @@ void salvarDados(NoAVL *caes, NoABB *estoque) {
     printf("Os dados foram salvos com sucesso em 'caes.txt' e 'estoque.txt'!\n"); // confirma para o usuário
 }
 
-// lê os arquivos de texto ao abrir o programa para recuperar os cadastros anteriores
+// registra no final do arquivo .txt a data e hora exatas em que o usuário encerrou a interação no terminal
+void registrarEncerramentoArquivos(void) {
+    time_t agora = time(NULL);                              // obtém o horário atual do sistema
+    struct tm *infoTempo = localtime(&agora);                 // converte para horário local
+    char timestamp[64] = "indisponivel";                    // buffer para data e hora formatadas
+
+    if (infoTempo != NULL) {                                // garante que a conversão foi bem sucedida
+        strftime(timestamp, sizeof(timestamp), "%d/%m/%Y %H:%M:%S", infoTempo); // formata dd/mm/aaaa hh:mm:ss
+    }
+
+    FILE *fCaes = fopen("caes.txt", "a");                   // abre caes.txt em modo anexar ("a") para escrever no final
+    if (fCaes != NULL) {                                    // se conseguiu abrir o arquivo
+        fprintf(fCaes, "# Encerrado pelo cliente em: %s\n", timestamp); // escreve a data e hora exata no final
+        fclose(fCaes);                                      // fecha o arquivo
+    }
+
+    FILE *fEstoque = fopen("estoque.txt", "a");             // abre o arquivo estoque.txt em modo anexar ("a") para escrever no final
+    if (fEstoque != NULL) {                                 // se conseguiu abrir o arquivo
+        fprintf(fEstoque, "# Encerrado pelo cliente em: %s\n", timestamp); // escreve a data e hora exata no final
+        fclose(fEstoque);                                   // fecha o arquivo
+    }
+}
+
+// lê os arquivos de texto quando abre o programa para recuperar os cadastros anteriores
 void carregarDados(NoAVL **caes, NoABB **estoque) {
     FILE *fCaes = fopen("caes.txt", "r");                   // tenta abrir o arquivo de cães em modo leitura ("r")
     if (fCaes != NULL) {                                    // se o arquivo já existir no computador
-        int id, idade;                                      // variáveis para ler os números
-        char nome[50], raca[40];                            // variáveis para ler os textos
-        while (fscanf(fCaes, "%d %s %s %d", &id, nome, raca, &idade) == 4) { // lê linha por linha enquanto achar os 4 dados
-            *caes = inserirAVL(*caes, id, nome, raca, idade); // insere cada cão lido de volta na árvore avl
+        int id, anos, meses;
+        char nome[50], raca[40];
+        while (fscanf(fCaes, "%d %s %s %d %d", &id, nome, raca, &anos, &meses) == 5) { // lê linha por linha enquanto achar os 5 dados
+            *caes = inserirAVL(*caes, id, nome, raca, anos, meses); // insere cada cão lido de volta na árvore avl
         }
         fclose(fCaes);                                      // fecha o arquivo após terminar a leitura
     }
 
-    FILE *fEstoque = fopen("estoque.txt", "r");   // tenta abrir o arquivo de estoque para leitura
+    FILE *fEstoque = fopen("estoque.txt", "r");             // tenta abrir o arquivo de estoque para leitura
     if (fEstoque != NULL) {                                 // se o arquivo existir
         int codigo, qtd;                                    // variáveis para código e quantidade
         char item[50];                                      // variável para o nome do produto
