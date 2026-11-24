@@ -63,7 +63,7 @@ int main() {
         printf("5. Ver Fila de Espera\n");
         printf("6. Ver Historico de Ações\n");
         printf("7. Desfazer Ultima Ação\n");
-        printf("8. Cadastrar Item no Estoque (ABB)\n");
+        printf("8. Cadastrar Item no Estoque\n");
         printf("9. Listar Estoque\n");
         printf("10. Salvar Dados\n");
         printf("0. Sair\n");
@@ -89,7 +89,7 @@ int main() {
 
         switch(opcao) {
             case 1: {
-                int id, anos = 0, meses = 0;
+                int id, anos, meses;
                 char nome[50], raca[40];
                 printf("ID: ");
                 scanf("%d", &id);

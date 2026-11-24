@@ -356,7 +356,7 @@ void desempilhar(NoPilha **topo) {
         return;                                             // sai da função
     }
     NoPilha *temp = *topo;                                  // guarda o item do topo para poder apagar
-    printf("-> Ação desfeita/removida do log: %s\n", temp->descricao); // mostra qual ação foi desfeita
+    printf(" Ação desfeita/removida do log: %s\n", temp->descricao); // mostra qual ação foi desfeita
     *topo = temp->prox;                                     // o topo passa a ser o item que estava logo abaixo
     free(temp);                                             // libera a memória do item removido
 }
@@ -441,7 +441,7 @@ void carregarDados(NoAVL **caes, NoABB **estoque) {
     if (fCaes != NULL) {                                    // se o arquivo já existir no computador
         int id, anos, meses;
         char nome[50], raca[40];
-        while (fscanf(fCaes, "%d %s %s %d %d", &id, nome, raca, &anos, &meses) == 5) { // lê linha por linha enquanto achar os 5 dados
+        while (fscanf(fCaes, "ID: %d | Nome do cão: %s | Raça: %s | %d anos e %d meses", &id, nome, raca, &anos, &meses) == 5) { // lê linha por linha enquanto achar os 5 dados
             *caes = inserirAVL(*caes, id, nome, raca, anos, meses); // insere cada cão lido de volta na árvore avl
         }
         fclose(fCaes);                                      // fecha o arquivo após terminar a leitura
