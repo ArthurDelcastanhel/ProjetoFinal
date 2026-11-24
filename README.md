@@ -10,10 +10,9 @@
 ## Justificativa
 * Necessidade de facilitar o atendimento veterinário e organizar o cadastro de animais para evitar perdas de registros.
 
-## Fontes de pesquisas realizadas
+## Fontes e pesquisas 
 * Artigo de Simone Nascimento destacando o excesso de animais abandonados nos abrigos para animais:
 (https://www.rampasuerj.com.br/post/ongs-passam-por-sobrecarga-com-excesso-de-animais-abandonados)
-* Utilizado o auxílio de AI (Gemini AI) para compreender o conceito e implementação de rotação de subárvores e balanceamento, e também para registrar em arquivos .txt a data e hora exata usando timestamp.
 
 ## Funcionalidades do sistema
 * Árvore AVL para realizar o cadastro, listagem e busca de cães. (ainda preciso fazer remoção e busca)
@@ -37,7 +36,7 @@ gcc main.c canil.c -o sistema_canil
 ./sistema_canil
 ```
 
-## Estrutura do Projeto
+## Organização do repositório
 
 O código foi estrutura aplicando boas práticas de um projeto acadêmico, respeitando os escopos de responsabilidade:
 
@@ -51,7 +50,14 @@ TrabalhoPRG/
     └── main.c                    # Menu de interação e interface do usuário (interação via terminal)
 ```
 
+# Dificuldaes encontradas
+Tive uma considerável dificuldade para compreender o conceito e implementação de rotação de subárvores e balanceamento, e também para registrar em arquivos .txt a data e hora exata em que o atendimento é encerrado pelo usuário.
+
+# Declaração de uso de IA
+* Utilizado o auxílio de AI (Gemini AI) implementar os desafios encontrados, me refiro a funcionalidade como rotação de subárvores e balanceamento, registro de data e hora em arquivos .txt utilizando timestamp (biblioteca time.h.
+
 ## Autoria
 * Nome: Arthur Delcastanhel da Silva
+* Matrícula: 202510703607
 * Curso e Instituição: Engenharia de Telecomunicações - IFSC
 * Disciplina: Programação II
